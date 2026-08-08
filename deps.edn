@@ -1,3 +1,4 @@
 {:paths ["src"]
  :aliases
- {:test {:extra-paths ["test"]}}}
+ {:test {:extra-paths ["test"]
+         :main-opts ["-m" "etzhayyim.social.jvm-runner"]}}}
