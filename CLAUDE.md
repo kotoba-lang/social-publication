@@ -6,4 +6,15 @@
 - Never weaken the four structural invariants: non-adjudicating output, at least two nonblank
   sources, no server-held key, and dry-run-only publication.
 - Consumers supply `:actor-id` and `:display-name` as configuration.
-- `./run_tests.sh` must pass from a standalone checkout.
+- A refusal must not carry a draft. `transition-to-drafted` receives the caller's `cell_state`,
+  so a `payload` left by an earlier success would otherwise survive the refusal and be
+  publishable by a caller that never reads `phase`.
+- `nbb run_tests.cljs` must pass from a standalone checkout. It runs the same suite on **both**
+  runtimes — nbb first (the workspace's first-class runtime), then `clojure -M:test` — and only
+  prints its green marker when both are green. The implementation is `.cljc`; a suite that runs
+  on one runtime makes portability a claim rather than an observation.
+- Do not reintroduce `run_tests.sh`. Shell scripts and `bb` as a script host are both retired
+  workspace-wide, and the loop that guards this repo shells the nbb runner directly.
+- The invariants are guarded by mutation testing, not just by green tests: see the
+  `social-publication` suite in the superproject's `scripts/maturity-loop/mutations.edn`. When
+  you change behaviour here, expect an anchor there to move — update it rather than deleting it.

@@ -87,10 +87,15 @@
                "server_held_key"
                (boolean
                 (get state "server_held_key" (get current "server_held_key"))))
+        ;; payload を落とすのは「拒否とは作らなかったことである」から。
+        ;; next-state は渡された cell_state を引き継ぐので、前回 drafted で
+        ;; 作った payload がそのまま残る —— phase を見ない呼び手は、いま
+        ;; 拒否されたはずの下書きをそこから publish できてしまう。
         refuse (fn [message]
                  {"cell_state"
                   (assoc next-state
                          "refusal" message
+                         "payload" {}
                          "phase" phase-refused)})]
     (cond
       (< (count (filter #(seq (str/trim (str %)))
