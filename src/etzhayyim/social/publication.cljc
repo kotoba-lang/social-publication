@@ -74,6 +74,15 @@
 (defn- without-leading-colon [value]
   (str/replace (str value) #"^:+" ""))
 
+(defn- server-key-claimed?
+  "no-server-key の判定。**真理値 `true` だけを鍵とみなさない。**
+
+  `state` はキーが全部文字列の wire 形で届くので、値も文字列で届きうる ——
+  `\"true\"` を `true?` で見ると素通りする。nil/false 以外はすべて鍵の主張と
+  みなして拒否側に倒す。"
+  [value]
+  (boolean value))
+
 (defn transition-to-drafted
   [config state]
   (let [current (cell-state state)
@@ -85,7 +94,7 @@
                (without-leading-colon
                 (get state "requested_status" (get current "requested_status")))
                "server_held_key"
-               (boolean
+               (server-key-claimed?
                 (get state "server_held_key" (get current "server_held_key"))))
         ;; payload を落とすのは「拒否とは作らなかったことである」から。
         ;; next-state は渡された cell_state を引き継ぐので、前回 drafted で
