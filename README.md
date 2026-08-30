@@ -16,11 +16,19 @@ dry-run-only invariants.
  ["source-a" "source-b"])
 ```
 
+## Operator quickstart
+
+`docs/operator-quickstart.md` walks the whole membrane end to end — resolving the dependency,
+running the suite, drafting a post, and reading each of the four refusals — with the real
+transcripts from a checkout.
+
 ## Tests
 
 ```bash
 nbb run_tests.cljs
 ```
+
+The classpath comes from `nbb.edn`; without it the namespace does not resolve.
 
 Runs the same suite on both runtimes — nbb (first-class in this workspace) and
 `clojure -M:test` — and reports green only when both are. The implementation is `.cljc`, so a
