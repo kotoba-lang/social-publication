@@ -13,6 +13,11 @@
   runtimes — nbb first (the workspace's first-class runtime), then `clojure -M:test` — and only
   prints its green marker when both are green. The implementation is `.cljc`; a suite that runs
   on one runtime makes portability a claim rather than an observation.
+- `nbb.edn` is what makes the documented `nbb run_tests.cljs` resolve: it carries `:paths
+  ["src" "test"]`. It is not stray config — delete it and the command in the README exits 1
+  with `Could not find namespace`, while the mutation harness keeps passing its own
+  `--classpath src:test` and stays green. That is the shape this repo's own loop exists to
+  catch, so it is worth not reintroducing.
 - Do not reintroduce `run_tests.sh`. Shell scripts and `bb` as a script host are both retired
   workspace-wide, and the loop that guards this repo shells the nbb runner directly.
 - The invariants are guarded by mutation testing, not just by green tests: see the
