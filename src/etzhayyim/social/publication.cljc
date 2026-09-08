@@ -3,7 +3,7 @@
 
   Actor identity and prose are configuration. Provenance, non-adjudication,
   no-server-key, and dry-run-only behavior are library invariants."
-  (:require [clojure.string :as str]))
+  (:require [kotoba.lang.text :as str]))
 
 (def disclaimer-prefix
   "【観測ミラー / accountability map — NOT a verdict, NOT advice, 非断定】")
