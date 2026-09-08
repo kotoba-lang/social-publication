@@ -13,7 +13,7 @@
 ;; script host を nbb に一本化しており、`.sh` の新規作成も禁じている。
 (ns run-tests
   (:require ["node:child_process" :as cp]
-            [clojure.string :as str]
+            [kotoba.lang.text :as str]
             [clojure.test :as t]
             [etzhayyim.social.publication-test]))
 
