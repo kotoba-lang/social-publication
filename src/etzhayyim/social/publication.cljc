@@ -25,11 +25,37 @@
   (let [{:keys [display-name]} (require-config config)]
     (str disclaimer-prefix " " display-name " が既知の観測から編んだ事実の要約です。")))
 
+(defn distinct-citations
+  "provenance の実体。空白だけの出典を落とし、**同じ出典の重複を 1 件に畳む**。
+
+  ≥ 2 という閾値は「ひとつの主張が複数の出所に支えられている」ことを言う
+  ために在る。同じ出典を 2 回引いた投稿は出所が 1 つなので、裏付けは何も増えて
+  いないのに閾値を数の上でだけ満たし、本文で『出典 2 件』と名乗れてしまう ——
+  空白出典と同じ形で、**数が合っているように見えるぶん外から気づけない**。
+
+  畳む単位は trim 後の文字列。前後の空白だけが違う 2 つは同じ出所であって、
+  空白は provenance ではない。記録に残すのは最初に現れた形（呼び手が渡した形）。
+
+  **この関数が provenance 規則の唯一の実装であること。** `enough-sources`（例外で
+  拒む経路）と `transition-to-drafted`（拒否 cell を返す経路）の両方がここを
+  呼ぶ—— 規則を 2 箇所に書くと、片方だけを直したときもう一方が黙って古いまま残る。"
+  [sources]
+  (->> (or sources [])
+       (filter #(seq (str/trim (str %))))
+       (reduce (fn [acc s]
+                 (let [k (str/trim (str s))]
+                   (if (contains? (:seen acc) k)
+                     acc
+                     (-> acc (update :seen conj k) (update :out conj s)))))
+               {:seen #{} :out []})
+       :out
+       vec))
+
 (defn enough-sources
   [sources]
-  (let [citations (vec (filter #(seq (str/trim (str %))) (or sources [])))]
+  (let [citations (distinct-citations sources)]
     (when (< (count citations) 2)
-      (throw (ex-info "source-provenance: a post needs ≥ 2 citations"
+      (throw (ex-info "source-provenance: a post needs ≥ 2 distinct citations"
                       {:citations citations})))
     citations))
 
@@ -107,9 +133,8 @@
                          "payload" {}
                          "phase" phase-refused)})]
     (cond
-      (< (count (filter #(seq (str/trim (str %)))
-                        (get next-state "sources"))) 2)
-      (refuse "source-provenance: a post needs ≥ 2 citations")
+      (< (count (distinct-citations (get next-state "sources"))) 2)
+      (refuse "source-provenance: a post needs ≥ 2 distinct citations")
 
       (get next-state "server_held_key")
       (refuse "no-server-key: server-held-key must be false")
