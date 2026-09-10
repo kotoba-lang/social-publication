@@ -98,6 +98,46 @@
       (is (= ["source-a" "source-b"] (get post ":post/sources")))
       (is (re-find #"出典 2 件" (get post ":post/body"))))))
 
+(deftest duplicate-citations-are-one-source
+  "同じ出典を 2 回引いても出所は 1 つ。重複を頭数に入れると、裏付けが何ひとつ
+  増えていない投稿が ≥ 2 の閾値を数の上でだけ満たし、本文で『出典 2 件』と
+  名乗る —— 空白出典とまったく同じ形の穴で、**数が合っているように見えるぶん
+  外から気づけない**。2026-09-11 まで実際に素通りしていた。"
+  (testing "同じ出典 2 回は閾値を満たさない"
+    (is (re-find #"≥ 2" (str (refusal-message #(draft "s" "b" ["source-a" "source-a"]))))))
+  (testing "空白の差は別の出典ではない"
+    (is (re-find #"≥ 2" (str (refusal-message #(draft "s" "b" ["source-a" "  source-a  "]))))))
+  (testing "重複は記録にも本文の件数にも残らない"
+    (let [post (draft "s" "b" ["source-a" "source-a" "source-b"])]
+      (is (= ["source-a" "source-b"] (get post ":post/sources")))
+      (is (re-find #"出典 2 件" (get post ":post/body")))))
+  (testing "別々の出典は畳まれない（畳みすぎの側も塞ぐ）"
+    (let [post (draft "s" "b" ["source-a" "source-b" "source-c"])]
+      (is (= ["source-a" "source-b" "source-c"] (get post ":post/sources")))
+      (is (re-find #"出典 3 件" (get post ":post/body"))))))
+
+(deftest the-two-provenance-paths-cannot-drift
+  "provenance 規則は 2 つの経路から使われる —— 例外で拒む `draft-observation-post`
+  と、拒否 cell を返す `transition-to-drafted`。それぞれが規則を持つと、片方を
+  直したときもう一方が黙って古いまま残る（重複出典は 2026-09-11 まで両方を
+  素通りしていた。1 箇所だけ直していたら、ここが割れたまま緑だった）。
+
+  割れると何が起きるか: state machine 側の門だけが緩いと、そこを通った入力が
+  `draft-observation-post` の中で例外になる —— state machine の契約は『拒否を
+  cell として返す』ことなので、拒否のかわりに throw が呼び手へ抜ける。"
+  (doseq [sources [["source-a" "source-a"]
+                   ["source-a" "  source-a  "]
+                   ["source-a" "   "]
+                   ["only-one"]
+                   []
+                   ["source-a" "source-b"]
+                   ["source-a" "source-a" "source-b"]]]
+    (testing (pr-str sources)
+      (let [direct-refused? (some? (refusal-message #(draft "s" "b" sources)))
+            machine-refused? (= publication/phase-refused
+                                (get (cell-after {"subject" "x" "sources" sources}) "phase"))]
+        (is (= direct-refused? machine-refused?))))))
+
 ;; ── :no-server-key / :dry-run-only ──────────────────────────────────────────
 
 (deftest state-machine-refuses-unsafe-transitions

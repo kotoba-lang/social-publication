@@ -83,8 +83,8 @@ Two things to notice, because both are load-bearing:
 - The non-adjudication notice is in **the body a reader sees**, not only in the
   `:post/non-adjudicating-notice` flag. Shortening the prefix is a regression even with the
   flag still true.
-- The citation count in the text is the count of *nonblank* sources, so it cannot disagree
-  with `:post/sources`.
+- The citation count in the text is the count of *distinct, nonblank* sources, so it cannot
+  disagree with `:post/sources`.
 
 `:post/status` is `":dry-run"`, `:post/is-mirror` is `true`, and `:post/server-held-key` is
 `false`. There is no argument that changes any of the three.
@@ -99,20 +99,30 @@ it returns a refusal.
 $ # (config {:actor-id "fuchi" :display-name "扶持"}, base state
 $ #  {"subject" "s" "sources" ["a" "b"] "requested_status" "dry-run"})
 two sources, dry-run      -> phase="drafted" payload-empty=false refusal=""
-one nonblank source       -> phase="refused" payload-empty=true  refusal="source-provenance: a post needs ≥ 2 citations"
+one nonblank source       -> phase="refused" payload-empty=true  refusal="source-provenance: a post needs ≥ 2 distinct citations"
+same source twice         -> phase="refused" payload-empty=true  refusal="source-provenance: a post needs ≥ 2 distinct citations"
+same source, spaced       -> phase="refused" payload-empty=true  refusal="source-provenance: a post needs ≥ 2 distinct citations"
 server key (boolean)      -> phase="refused" payload-empty=true  refusal="no-server-key: server-held-key must be false"
 server key (wire string)  -> phase="refused" payload-empty=true  refusal="no-server-key: server-held-key must be false"
 requested_status=live     -> phase="refused" payload-empty=true  refusal="R0-gate: only dry-run posts"
-status with leading colon  -> phase="drafted" payload-empty=false refusal=""
+status with leading colon -> phase="drafted" payload-empty=false refusal=""
 ```
 
-Read those six lines as three rules:
+Read those eight lines as four rules:
 
 1. **A blank source is not a source.** `["a" "   "]` is one citation, and one is not enough.
-2. **A wire-shaped key is still a key.** `"true"` refuses exactly like `true`. Anything but
+2. **The same source twice is one source.** The ≥ 2 threshold exists to say a claim rests on
+   more than one origin, so citing one origin twice adds no corroboration — it only makes the
+   count look right. Whitespace is not provenance either: `["a" "  a  "]` is also one.
+3. **A wire-shaped key is still a key.** `"true"` refuses exactly like `true`. Anything but
    nil/false is treated as a claim to hold a key.
-3. **The status the library emits is a status it accepts back.** `":dry-run"` — the form it
+4. **The status the library emits is a status it accepts back.** `":dry-run"` — the form it
    writes into `:post/status` — round-trips. Only a genuinely different status is refused.
+
+Rules 1 and 2 are one function, `distinct-citations`, and both entry points call it — this
+one that returns a refusal, and `draft-observation-post`, which throws. When the rule lived in
+two places they agreed only by coincidence; a fix to one would have left the other quietly
+stale. `the-two-provenance-paths-cannot-drift` in the suite is what keeps them the same.
 
 ## 5. A refusal carries no draft
 

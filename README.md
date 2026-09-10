@@ -36,10 +36,17 @@ suite that runs on one runtime would let a JVM-only regression through unseen.
 
 Beyond the happy path the suite pins: the non-adjudication notice reaches the reader's text and
 not just the `:post/non-adjudicating-notice` flag; blank citations count toward neither the
-two-source threshold nor the recorded provenance; a wire-shaped (string) `server_held_key` is
-still a server key; the `":dry-run"` status the library emits is one it accepts back; a refusal
-carries no draft, including one left behind by an earlier success; and an actor with no display
-name cannot produce an unattributed mirror post.
+two-source threshold nor the recorded provenance; the same source cited twice is one source,
+so a post cannot claim two-source corroboration it does not have; a wire-shaped (string)
+`server_held_key` is still a server key; the `":dry-run"` status the library emits is one it
+accepts back; a refusal carries no draft, including one left behind by an earlier success; and
+an actor with no display name cannot produce an unattributed mirror post.
+
+It also pins that the two provenance entry points agree. The rule is one function,
+`distinct-citations`; `draft-observation-post` throws on a violation and `transition-to-drafted`
+returns a refusal, but they must decide the same way. When the rule lived in both places it
+held only by coincidence — and if only the state machine had stayed stale, an input it let
+through would have thrown out of a function whose contract is to return a refusal.
 
 Each of those is backed by a mutation in the superproject's
 `scripts/maturity-loop/mutations.edn`, so the assertions are re-checked for whether they can
