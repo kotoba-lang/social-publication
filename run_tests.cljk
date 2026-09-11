@@ -1,4 +1,4 @@
-#!/usr/bin/env nbb
+#!/usr/bin/env kbb
 ;; run_tests.cljk — 同じ suite を **両方の runtime** で走らせる。
 ;;
 ;; 実装は `.cljc` である。だがテストが片方の runtime でしか走らないうちは、
@@ -7,7 +7,7 @@
 ;; 緑のままだった。ここでは nbb（このワークスペースの第一 runtime）を主とし、
 ;; JVM を互換確認として後ろに置く。
 ;;
-;;   nbb run_tests.cljk
+;;   kbb --backend sci run_tests.cljk
 ;;
 ;; 旧 `run_tests.sh`（`bb` + shell）は撤去した。CLAUDE.md（superproject）が
 ;; script host を nbb に一本化しており、`.sh` の新規作成も禁じている。
@@ -22,9 +22,9 @@
   "social-publication: both runtimes green (nbb + JVM)")
 
 (defn- jvm-suite
-  "JVM 側は別プロセス。`clojure -M:test` の中身は `deps.edn` の `:test` alias。"
+  "JVM 側は別プロセス。`kbb -M:test` の中身は `deps.edn` の `:test` alias。"
   []
-  (println "── JVM (clojure -M:test)")
+  (println "── JVM (kbb -M:test)")
   (let [r (cp/spawnSync "clojure" #js ["-M:test"]
                         #js {:encoding "utf8" :shell false
                              :maxBuffer (* 16 1024 1024)})

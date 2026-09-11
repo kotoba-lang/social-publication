@@ -9,11 +9,11 @@
 - A refusal must not carry a draft. `transition-to-drafted` receives the caller's `cell_state`,
   so a `payload` left by an earlier success would otherwise survive the refusal and be
   publishable by a caller that never reads `phase`.
-- `nbb run_tests.cljk` must pass from a standalone checkout. It runs the same suite on **both**
-  runtimes — nbb first (the workspace's first-class runtime), then `clojure -M:test` — and only
+- `kbb --backend sci run_tests.cljk` must pass from a standalone checkout. It runs the same suite on **both**
+  runtimes — nbb first (the workspace's first-class runtime), then `kbb -M:test` — and only
   prints its green marker when both are green. The implementation is `.cljc`; a suite that runs
   on one runtime makes portability a claim rather than an observation.
-- `nbb.edn` is what makes the documented `nbb run_tests.cljk` resolve: it carries `:paths
+- `nbb.edn` is what makes the documented `kbb --backend sci run_tests.cljk` resolve: it carries `:paths
   ["src" "test"]`. It is not stray config — delete it and the command in the README exits 1
   with `Could not find namespace`, while the mutation harness keeps passing its own
   `--classpath src:test` and stays green. That is the shape this repo's own loop exists to

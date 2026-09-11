@@ -1,7 +1,7 @@
 (ns etzhayyim.social.jvm-runner
-  "`clojure -M:test` の入口。**互換層であって第一 runtime ではない**
+  "`kbb -M:test` の入口。**互換層であって第一 runtime ではない**
   （superproject CLAUDE.md の runtime 優先順位: nbb > … > JVM）。
-  第一 runtime での実行は `nbb run_tests.cljk` が行い、これはその後ろで
+  第一 runtime での実行は `kbb --backend sci run_tests.cljk` が行い、これはその後ろで
   `.cljc` が JVM でも同じ答えを出すことだけを確かめる。"
   (:require [clojure.test :as t]
             [etzhayyim.social.publication-test]))

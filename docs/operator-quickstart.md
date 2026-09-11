@@ -26,7 +26,7 @@ branch, so the four invariants you audited are the four you get:
 Verify it resolves and is callable before writing any actor code:
 
 ```console
-$ clojure -M -e '(require (quote [etzhayyim.social.publication :as pub]))
+$ kbb -M -e '(require (quote [etzhayyim.social.publication :as pub]))
                  (println (get (pub/draft-observation-post
                                 {:actor-id "a" :display-name "A"} "s" "b" ["x" "y"])
                                ":post/status"))'
@@ -40,8 +40,8 @@ marker only when both are green — the implementation is `.cljc`, so a suite th
 would make portability a claim rather than an observation.
 
 ```console
-$ nbb run_tests.cljk
-── JVM (clojure -M:test)
+$ kbb --backend sci run_tests.cljk
+── JVM (kbb -M:test)
 Testing etzhayyim.social.publication-test
 
 Ran 11 tests containing 45 assertions.
@@ -66,7 +66,7 @@ the namespace is present, the classpath is not.
 `draft-observation-post` is the direct form. Config is yours; the invariants are not.
 
 ```console
-$ nbb -e '(require (quote [etzhayyim.social.publication :as pub]))
+$ kbb --backend sci -e '(require (quote [etzhayyim.social.publication :as pub]))
           (println (get (pub/draft-observation-post
                          {:actor-id "fuchi" :display-name "扶持 — Maintainer Sustenance Allocator"}
                          "観測: 依存の維持者が無償である"
@@ -146,7 +146,7 @@ There is no live mode to enable. `build-live` exists to refuse, and to tell you 
 required:
 
 ```console
-$ nbb -e '(require (quote [etzhayyim.social.publication :as pub]))
+$ kbb --backend sci -e '(require (quote [etzhayyim.social.publication :as pub]))
           (try (pub/build-live {:actor-id "fuchi" :display-name "扶持"})
                (catch :default e (println (pr-str (ex-data e))) (println (ex-message e))))'
 {:actor-id "fuchi", :status :refused}
@@ -163,7 +163,7 @@ mirror that does not say whose observation it is has no accountability in it, so
 unattributed post is not producible.
 
 ```console
-$ nbb -e '(require (quote [etzhayyim.social.publication :as pub]))
+$ kbb --backend sci -e '(require (quote [etzhayyim.social.publication :as pub]))
           (try (pub/draft-observation-post {:actor-id "fuchi"} "s" "b" ["a" "b"])
                (catch :default e (println (ex-message e))))'
 social publication config requires :display-name
@@ -181,5 +181,5 @@ test that quietly stopped biting stays green forever. Change behaviour and an an
 move; update it rather than deleting it.
 
 ```console
-$ nbb scripts/maturity-loop/run.cljs --only social-publication   # from the superproject root
+$ kbb --backend sci scripts/maturity-loop/run.cljk --only social-publication   # from the superproject root
 ```

@@ -25,13 +25,13 @@ transcripts from a checkout.
 ## Tests
 
 ```bash
-nbb run_tests.cljk
+kbb --backend sci run_tests.cljk
 ```
 
 The classpath comes from `nbb.edn`; without it the namespace does not resolve.
 
 Runs the same suite on both runtimes — nbb (first-class in this workspace) and
-`clojure -M:test` — and reports green only when both are. The implementation is `.cljc`, so a
+`kbb -M:test` — and reports green only when both are. The implementation is `.cljc`, so a
 suite that runs on one runtime would let a JVM-only regression through unseen.
 
 Beyond the happy path the suite pins: the non-adjudication notice reaches the reader's text and
