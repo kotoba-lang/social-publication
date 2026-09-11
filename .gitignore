@@ -1,4 +1,4 @@
-# `clojure -M:test`（run_tests.cljs の JVM 半分）が作る classpath cache
+# `clojure -M:test`（run_tests.cljk の JVM 半分）が作る classpath cache
 .cpcache/
 
 # nbb dependency cache -- a build artifact, not source

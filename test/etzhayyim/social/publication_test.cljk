@@ -1,7 +1,7 @@
 (ns etzhayyim.social.publication-test
   "library.edn が宣言する 4 つの不変条件を、実際に破れるところで固定する。
 
-  この suite は **両方の runtime で走る**（`run_tests.cljs`）。実装は `.cljc`
+  この suite は **両方の runtime で走る**（`run_tests.cljk`）。実装は `.cljc`
   だが、テストが片方でしか走らないうちは移植性は主張であって観測ではない ——
   同じ穴が `kotoba-lang/codebase` で実際に起きている（cljs 側が f64 decode を
   一度も通らず、JVM 専用に戻しても緑のままだった）。
