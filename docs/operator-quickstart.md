@@ -40,7 +40,7 @@ marker only when both are green — the implementation is `.cljc`, so a suite th
 would make portability a claim rather than an observation.
 
 ```console
-$ nbb run_tests.cljs
+$ nbb run_tests.cljk
 ── JVM (clojure -M:test)
 Testing etzhayyim.social.publication-test
 

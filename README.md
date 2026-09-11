@@ -25,7 +25,7 @@ transcripts from a checkout.
 ## Tests
 
 ```bash
-nbb run_tests.cljs
+nbb run_tests.cljk
 ```
 
 The classpath comes from `nbb.edn`; without it the namespace does not resolve.

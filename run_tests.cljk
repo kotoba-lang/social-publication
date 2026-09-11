@@ -1,5 +1,5 @@
 #!/usr/bin/env nbb
-;; run_tests.cljs — 同じ suite を **両方の runtime** で走らせる。
+;; run_tests.cljk — 同じ suite を **両方の runtime** で走らせる。
 ;;
 ;; 実装は `.cljc` である。だがテストが片方の runtime でしか走らないうちは、
 ;; 移植性は主張であって観測ではない —— `kotoba-lang/codebase` で実際に起きた:
@@ -7,7 +7,7 @@
 ;; 緑のままだった。ここでは nbb（このワークスペースの第一 runtime）を主とし、
 ;; JVM を互換確認として後ろに置く。
 ;;
-;;   nbb run_tests.cljs
+;;   nbb run_tests.cljk
 ;;
 ;; 旧 `run_tests.sh`（`bb` + shell）は撤去した。CLAUDE.md（superproject）が
 ;; script host を nbb に一本化しており、`.sh` の新規作成も禁じている。
