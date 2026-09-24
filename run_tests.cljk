@@ -14,7 +14,7 @@
 (ns run-tests
   (:require ["node:child_process" :as cp]
             [kotoba.lang.text :as str]
-            [clojure.test :as t]
+            [kotoba.test :as t]
             [etzhayyim.social.publication-test]))
 
 (def green-marker
