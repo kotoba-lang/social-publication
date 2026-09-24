@@ -9,7 +9,7 @@
   各 deftest の docstring は「どの退行を塞いでいるか」を書く。塞いでいる先が
   書けない test は、水増しである。"
   (:require [kotoba.lang.text :as str]
-            [clojure.test :refer [deftest is testing]]
+            [kotoba.test :refer [deftest is testing]]
             [etzhayyim.social.publication :as publication]))
 
 (def config

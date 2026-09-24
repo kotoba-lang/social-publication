@@ -3,7 +3,7 @@
   （superproject CLAUDE.md の runtime 優先順位: nbb > … > JVM）。
   第一 runtime での実行は `kbb --backend sci run_tests.cljk` が行い、これはその後ろで
   `.cljc` が JVM でも同じ答えを出すことだけを確かめる。"
-  (:require [clojure.test :as t]
+  (:require [kotoba.test :as t]
             [etzhayyim.social.publication-test]))
 
 (defn -main [& _]
