@@ -9,7 +9,7 @@
 ;;
 ;;   kbb --backend sci run_tests.cljk
 ;;
-;; 旧 `run_tests.sh`（`bb` + shell）は撤去した。CLAUDE.md（superproject）が
+;; 旧 `run_tests.sh`（`bb` + shell）は撤去した。AGENTS.md（superproject）が
 ;; script host を nbb に一本化しており、`.sh` の新規作成も禁じている。
 (ns run-tests
   (:require ["node:child_process" :as cp]

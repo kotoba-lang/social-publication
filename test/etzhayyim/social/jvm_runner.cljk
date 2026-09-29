@@ -1,6 +1,6 @@
 (ns etzhayyim.social.jvm-runner
   "`kbb -M:test` の入口。**互換層であって第一 runtime ではない**
-  （superproject CLAUDE.md の runtime 優先順位: nbb > … > JVM）。
+  （superproject AGENTS.md の runtime 優先順位: nbb > … > JVM）。
   第一 runtime での実行は `kbb --backend sci run_tests.cljk` が行い、これはその後ろで
   `.cljc` が JVM でも同じ答えを出すことだけを確かめる。"
   (:require [kotoba.test :as t]
