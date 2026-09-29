@@ -58,7 +58,7 @@
       (is (re-find #"非断定" body)))))
 
 (deftest identity-comes-from-config-not-from-the-library
-  "actor 中立性（CLAUDE.md）。名乗りが config 由来であること —— 既定値を
+  "actor 中立性（AGENTS.md）。名乗りが config 由来であること —— 既定値を
   埋め込むと、設定を忘れた actor が他人の名前で発信する。"
   (let [a (publication/disclaimer {:actor-id "a" :display-name "扶持"})
         b (publication/disclaimer {:actor-id "b" :display-name "標本"})]
